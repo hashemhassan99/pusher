@@ -130,5 +130,6 @@
     });
 
 </script>
+<script src="{{asset('js/pusherNotifications.js')}}"></script>
 </body>
 </html>

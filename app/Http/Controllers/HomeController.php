@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
+use App\Events\NewNotification;
 use App\Post;
 use Illuminate\Http\Request;
 use Auth;
@@ -26,7 +27,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $posts = Post::get();
+        $posts = Post::with(['comments' => function($q){
+            $q->select('id','post_id','comment');
+        }])->get();
         return view('home',compact('posts'));
     }
 
@@ -36,6 +39,12 @@ class HomeController extends Controller
             'user_id' => Auth::id(),
             'comment' => $request->post_content,
         ]);
+        $data = [
+            'user_id' => Auth::id(),
+            'comment' => $request->post_content,
+            'post_id' => $request->post_id,
+        ];
+        event(new NewNotification($data));
         return redirect()->back()->with(['success' => 'your comment is added successfully']);
     }
 }

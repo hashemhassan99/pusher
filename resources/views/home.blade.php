@@ -7,9 +7,9 @@
                 <div class="card">
                     <div class="card-header">{{ __('Dashboard') }}</div>
                     @if(Session::has('success'))
-                    <div class="col-6 alert alert-success">
-                        {{Session::get('success')}}
-                    </div>
+                        <div class="col-6 alert alert-success">
+                            {{Session::get('success')}}
+                        </div>
                     @endif
                     @if(isset($posts) && $posts->count() >0)
                         @foreach($posts as $post)
@@ -25,6 +25,13 @@
 
                                 <br>
                                 <br>
+                                <h5>Comments</h5>
+                                @if($post->comments()->count() > 0)
+                                    @foreach($post->comments as $comment)
+                                        <p>{{$comment ->comment}}</p>
+                                    @endforeach
+                                @endif
+                                <br><br>
 
                                 <form method="POST" action="{{route('comment.save')}}" enctype="multipart/form-data">
                                     @csrf
@@ -37,8 +44,8 @@
                                     </div>
                                     <br>
                                     @if(Auth::id() != $post -> user -> id)
-                                    <button type="submit" class="btn btn-primary">أضافه ردك</button>
-                                     @endif
+                                        <button type="submit" class="btn btn-primary">أضافه ردك</button>
+                                    @endif
 
                                 </form>
                             </div>
